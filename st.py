@@ -6,13 +6,13 @@ from sklearn.metrics import accuracy_score, roc_curve, auc
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
-import warnings
 
 # Set Streamlit theme to vibrant and neon
-st.set_page_config(layout="wide")
+st.set_page_config(layout="wide", page_title="ECommerce Prediction", page_icon=":chart_with_upwards_trend:")
 
 # Set a custom color palette
 custom_palette = sns.color_palette(["#FF5733", "#FFC300", "#DAF7A6", "#C70039", "#900C3F"])
+sns.set_palette(custom_palette)
 
 # Load and preprocess the data
 @st.cache
@@ -31,12 +31,10 @@ test_size = st.sidebar.slider("Test Size", 0.1, 0.3, 0.15, key='test_size_slider
 # Display the dataframe
 st.subheader("ECommerce Prediction With Logistic Regression")
 
-st.write("Please be patient as the data is computationally intensive. Graphs may take a while to load longer than usual.")
 # EDA
 st.subheader("Exploratory Data Analysis")
 independents = ['Administrative', 'Administrative_Duration', 'ProductRelated', 'SpecialDay']
 eda = df[independents + ['Revenue']]
-sns.set(style="whitegrid")  # Set Seaborn style
 fig_eda = sns.pairplot(eda, hue='Revenue', palette=custom_palette).fig
 st.pyplot(fig_eda)
 
@@ -76,8 +74,10 @@ ax.set_xlabel('False Positive Rate')
 ax.set_ylabel('True Positive Rate')
 ax.set_title('Receiver Operating Characteristic')
 ax.legend(loc="lower right")
+ax.patch.set_alpha(0)  # Set background transparency
 st.pyplot(fig)
 
+# S-Curve Visualization
 st.subheader("S-Curve Visualization")
 
 # Define percentiles for outlier removal
@@ -103,24 +103,3 @@ ax_s_curve.set_xlabel('Predicted Probability')
 ax_s_curve.set_ylabel('Actual Outcome')
 ax_s_curve.set_title('Logistic Regression S-Curve Visualization (Outliers Removed)')
 st.pyplot(fig_s_curve)
-
-# Find the optimal threshold (closest to top-left corner of ROC curve)
-optimal_idx = np.argmax(true_positive - false_positive)
-optimal_threshold = thresholds[optimal_idx]
-
-# Apply the threshold to determine the state
-states = np.where(y_probs > optimal_threshold, 'True', 'False')
-
-# Visualize the result
-fig_threshold_visualization, ax_threshold_visualization = plt.subplots(figsize=(10, 6))
-for state in np.unique(states):
-    mask = states == state
-    ax_threshold_visualization.scatter(np.arange(len(y_probs))[mask], y_probs[mask],
-                                       color=colors[state], label=f'{state} (Threshold = {optimal_threshold:.2f})', alpha=0.3)
-
-ax_threshold_visualization.set_xlabel('Sorted Index')
-ax_threshold_visualization.set_ylabel('Predicted Probability')
-ax_threshold_visualization.set_title('Logistic Regression Probability Threshold Visualization')
-ax_threshold_visualization.legend()
-st.pyplot(fig_threshold_visualization)
-
