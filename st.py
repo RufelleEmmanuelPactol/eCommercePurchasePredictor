@@ -8,6 +8,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import warnings
 
+sns.set(style="whitegrid")
+plt.rcParams.update({'font.size': 12, 'font.family': 'Arial'})
+
+
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
@@ -60,16 +64,6 @@ df, X, y = load_data()
 # Sidebar for user input
 st.sidebar.header("Model Parameters")
 test_size = st.sidebar.slider("Test Size", 0.1, 0.3, 0.15)
-
-# Display the dataframe
-st.write("Data Preview:", df.head())
-
-# EDA
-st.subheader("Exploratory Data Analysis")
-independents = ['Administrative', 'Administrative_Duration', 'ProductRelated', 'SpecialDay']
-eda = df[independents + ['Revenue']]
-fig_eda = sns.pairplot(eda, hue='Revenue').fig
-st.pyplot(fig_eda)
 
 # Train the model
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=55)
@@ -125,17 +119,6 @@ score = accuracy_score(y_test, y_hat)
 y_probs = model.predict_proba(X_test)[:, 1]
 fpr, tpr, thresholds = roc_curve(y_test, y_probs)
 roc_auc = auc(fpr, tpr)
-
-# ROC Curve
-st.subheader("ROC Curve")
-fig, ax = plt.subplots()
-ax.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % roc_auc)
-ax.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
-ax.set_xlabel('False Positive Rate')
-ax.set_ylabel('True Positive Rate')
-ax.set_title('Receiver Operating Characteristic')
-ax.legend(loc="lower right")
-st.pyplot(fig)
 
 # Accuracy
 st.metric("Accuracy Score", score)
