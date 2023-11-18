@@ -32,8 +32,6 @@ test_size = st.sidebar.slider("Test Size", 0.1, 0.3, 0.15, key='test_size_slider
 st.subheader("ECommerce Prediction With Logistic Regression")
 
 st.write("Please be patient as the data is computationally intensive. Graphs may take a while to load longer than usual.")
-if (st.button('Visit Documentation')):
-
 # EDA
 st.subheader("Exploratory Data Analysis")
 independents = ['Administrative', 'Administrative_Duration', 'ProductRelated', 'SpecialDay']
