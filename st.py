@@ -27,6 +27,14 @@ X = df[['Administrative', 'Administrative_Duration', 'ProductRelated', 'SpecialD
     , 'ProductRelated_Duration']]
 # Revenue - Output
 y = df['Revenue']
+# Updated cache decorator
+@st.cache_data
+def load_data():
+    df = pd.read_csv('archive/online_shoppers_intention.csv')
+    X = df[['Administrative', 'Administrative_Duration', 'ProductRelated', 'SpecialDay', 'ProductRelated_Duration']]
+    y = df['Revenue']
+    return df, X, y
+
 # Let's split this data! :) Let's goo!!!
 # Initializing the model!!!! 0v0
 # Let's split this data! :) Let's goo!!!
@@ -96,7 +104,7 @@ df, X, y = load_data()
 
 # Sidebar for user input
 st.sidebar.header("Model Parameters")
-test_size = st.sidebar.slider("Test Size", 0.1, 0.3, 0.15)
+test_size = st.sidebar.slider("Test Size", 0.1, 0.3, 0.15, key='test_size_slider')
 
 # Display the dataframe
 st.write("Data Preview:", df.head())
