@@ -29,7 +29,9 @@ X = df[['Administrative', 'Administrative_Duration', 'ProductRelated', 'SpecialD
 y = df['Revenue']
 # Let's split this data! :) Let's goo!!!
 # Initializing the model!!!! 0v0
+# Let's split this data! :) Let's goo!!!
 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.15, random_state=55)
 model = LogisticRegression()
 model.fit(X_train, y_train)
 
